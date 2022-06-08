@@ -8,9 +8,7 @@ use regex::Regex;
 // fn matrix_sum(matrix: &Vec<Vec<u32>>) -> Option<u32> {
 // }
 
-const SEP_REGEX: Regex = Regex::new(r"([ ,.]+)").expect("Invalid REGEX");
-
-fn split_keep<'a>(r: &'a Regex, text: &'a str) -> Vec<&'a str> {
+fn split_keep<'a>(r: &Regex, text: &'a str) -> Vec<&'a str> {
     let mut result = Vec::new();
     let mut last = 0;
     for (index, matched) in text.match_indices(r) {
@@ -36,7 +34,7 @@ fn load_matrix(file: &File) -> io::Result<Vec<Vec<u32>>> {
         for word in split_keep(&regex, &words) {
             inner_vec.push(word.parse().expect("invalid number"));
         }
-       vec.push(inner_vec);
+        vec.push(inner_vec);
     }
     Ok(vec)
 }
@@ -48,18 +46,24 @@ mod tests {
     use super::*;
 
     #[test]
-    fn matrix_is_loaded() -> io::Result<Vec<Vec<u32>>> {
+    fn matrix_is_loaded() {
         let five_by_five =
             File::open("resources/test/c_398_5_5.txt.rs").expect("could not read test file");
         let vec = load_matrix(&five_by_five);
-        assert_eq!(vec.len(), 5);
-        for row in vec.iter() {
-            assert_eq!(row.len(), 5);
-            for num in row.iter() {
-                print!("{} ", num);
+        match vec {
+            Ok(vec) => {
+                assert_eq!(vec.len(), 5);
+                for row in vec.iter() {
+                    assert_eq!(row.len(), 5);
+                    for num in row.iter() {
+                        print!("{} ", num);
+                    }
+                    println!();
+                }
             }
-            println!();
+            Err(e) => {
+                eprintln!("{:?}", e);
+            }
         }
-        Ok(vec)
     }
 }

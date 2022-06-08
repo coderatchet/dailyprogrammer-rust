@@ -1,13 +1,13 @@
 fn calculate_sum(phrase: &str) -> Option<u32> {
-    phrase.bytes()
+    phrase
+        .bytes()
         .map(|x| (x - 96) as u32)
-        .fold(Option::from(0),
-              |acc, y| acc.map(|sum| sum + y))
+        .fold(Option::from(0), |acc, y| acc.map(|sum| sum + y))
 }
 
 #[cfg(test)]
 mod tests {
-    use super::challenge::challenge_399::calculate_sum;
+    use super::calculate_sum;
 
     #[test]
     fn test_0() {
